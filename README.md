@@ -3,4 +3,4 @@
 * Conwell, Tim;
 * Cussen, Joshua;
 * Hoegh Stuart;
-* Lea, Jackson;
+* Lea, Jackson.
