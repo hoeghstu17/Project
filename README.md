@@ -1,4 +1,5 @@
-# CSC-151-02 Final Project
+# CSC-151-02
+## Final Project
 ------------------------------------------------
 ### Authors:
 * Conwell, Tim;
