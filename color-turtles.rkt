@@ -15,7 +15,7 @@
 ;;;
 (define rainbow (list "red" "orange" "yellow" "green" "blue" "purple"))
 
-(define rainbow-turtles
+(define color-turtles
   (lambda (turtle side-length n colors)
     (let* ([lst colors]
           [len (length lst)])
