@@ -13,4 +13,5 @@
 * sun is made with concentric turtles
 * background is a blend of black/purple/grey/space colours
 * background blends from light to dark at various points throughout the sequence
-* 
+* earth is the fixed point
+* earth changes colour depending on 'seasons'
