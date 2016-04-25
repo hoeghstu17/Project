@@ -16,5 +16,7 @@
 * earth is the fixed point
 * earth changes colour depending on 'seasons'
 * varying number of unit circles as stars
+* size of sun scales with size of image
+* size of sun changes also with image number
 
 ### Proposal:
