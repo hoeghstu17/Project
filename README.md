@@ -15,3 +15,4 @@
 * background blends from light to dark at various points throughout the sequence
 * earth is the fixed point
 * earth changes colour depending on 'seasons'
+* varying number of unit circles as stars
