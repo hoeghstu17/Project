@@ -9,7 +9,7 @@
 ---
 ## Design Proposal
 ### Initial ideas:
-* sun rotating around a fixed point incremented by 365 up to (end beyond) 1000
+* sun rotating around a fixed point incremented by 365 up to (and beyond) 1000
 * sun is made with concentric turtles
 * background is a blend of black/purple/grey/space colours
 * background blends from light to dark at various points throughout the sequence
@@ -19,5 +19,6 @@
 * size of sun scales with size of image
 * size of sun changes also with image number
 * earth can be square of blue and green pixels, scalable using image-scale (or something like that)
+* different colour pallettes: eg. dusk, pastelle, neon
 
 ### Proposal:
