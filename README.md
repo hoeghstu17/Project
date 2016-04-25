@@ -18,5 +18,6 @@
 * varying number of unit circles as stars
 * size of sun scales with size of image
 * size of sun changes also with image number
+* earth can be square of blue and green pixels, scalable using image-scale (or something like that)
 
 ### Proposal:
