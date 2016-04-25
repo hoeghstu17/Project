@@ -21,4 +21,10 @@
 * earth can be square of blue and green pixels, scalable using image-scale (or something like that)
 * different colour pallettes: eg. dusk, pastelle, neon
 
+### Possible variables
+season
+day (0-364) -> location of sun
+colour palletes
+
+
 ### Proposal:
