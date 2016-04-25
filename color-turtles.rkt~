@@ -14,8 +14,6 @@
 ;;; Postconditions
 ;;;
 (define rainbow (list "red" "orange" "yellow" "green" "blue" "purple"))
-(define world (image-show (image-new 500 500)))
-(define test-turtle (turtle-new world))
 
 (define color-turtles
   (lambda (turtle side-length n colors)
