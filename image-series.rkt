@@ -25,9 +25,11 @@
                (tens (+ n-tens 10) (+ count-tens 1))]))])
       
       (ones n 0)
-      (car lst)
-      ;(tens (- n (car lst)) 0)
       )))
+
+(define int->list3
+  (lambda (n)
+    (map (compose (section string->number <>) (section char->string <>)) (string->list (number->string n)))))
 
 
 
