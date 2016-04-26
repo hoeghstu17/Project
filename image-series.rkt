@@ -44,11 +44,15 @@
               [(zero? (modulo n 100))
                (cons 0 lst)]
               [(zero? (modulo n-tens 100))
-               (cons (- 100 (* 10 count-tens) lst))]
+               (cons (/ (- 100 (* 10 count-tens)) 10) lst)]
               [else
                (tens (+ n-tens 10) (+ count-tens 1))]))])
       
-      (ones n 0)))))
+      (ones n 0)
+      (car lst)
+      ;(tens (- n (car lst)) 0)
+      ))))
+
               
 
   
