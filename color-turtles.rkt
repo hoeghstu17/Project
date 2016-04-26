@@ -14,7 +14,9 @@
 ;;; Postconditions
 ;;;
 (define rainbow (list "red" "orange" "yellow" "green" "blue" "purple"))
-(define world (image-show (image-new 500 500)))
+(define earth (list "blue" "green" "green" "blue"))
+(define sun (list "red" "goldenrod" "gold" "yellow"))
+(define world (image-show (image-new 5000 5000)))
 (define test-turtle (turtle-new world))
 
 (define color-turtles
