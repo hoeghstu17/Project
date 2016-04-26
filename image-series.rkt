@@ -3,5 +3,12 @@
 
 (define image-series
   (lambda (n width height)
-    (let* ([image (image-new width height)]
-           )0)))
+    (let* ([image (image-compute
+                   (lambda (col row)
+                     (irgb
+                      (* row (/ 256 (- height 1)))
+                      0
+                      (* col (/ 256 (- width 1)))))
+                   width
+                   height)])
+      image)))
