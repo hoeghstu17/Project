@@ -44,4 +44,15 @@
      (lambda (col row)
        
 
-
+(define image-series1
+  (lambda (n width height)
+    (let* ([image (image-compute
+                   (lambda (col row)
+                     (irgb
+                      (* col (/ (* 28 (remainder n 10)) (- width 1)))
+                      (* row (/ (* 28 (car (cdr (int->list n)))) (- width 1)))
+                      (* row (/ (* 28 (car (int->list n))) (- width 1)))))
+                   width
+                   height)])
+        image)))
+        
