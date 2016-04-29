@@ -27,21 +27,20 @@
     (let* ([image (image-compute
                    (lambda (col row)
                      (irgb
-                      (* row (/ 256 (- height 1)))
-                      0
-                      (* col (/ 256 (- width 1)))))
+                      (blend-chooser n width height)
+                      (blend-chooser n width height)
+                      (blend-chooser n width height)))
                    width
                    height)])
       image)))
 
 (define blend-chooser
   (lambda (n width height)
-    (let ([row-or-col 0]
-          [max-value (- 256 (* n (quotient 256 9)))]))
-      
-    (when 
-    (image-compute
-     (lambda (col row)
-       
-
-
+    (let ([max-value (- 256 (* n (quotient 256 9)))]) 
+      (if (even? n)
+          (lambda (col row) (* col (/ max-value (- width 1))))
+          (lambda (col row) (* row (/ max-value (- height 1))))))))
+           
+           
+           
+           
