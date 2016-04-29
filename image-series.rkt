@@ -7,6 +7,10 @@
   (lambda (n)
      (list (quotient n 100) (quotient (remainder n 100) 10) (remainder n 10))))
 
+(define fancy-int-list
+  (lambda (lst)
+    0))
+
 
 
 
@@ -18,9 +22,9 @@
     (let* ([image (image-compute
                    (lambda (col row)
                      (irgb
-                      (* col (/ 256 (- height 1)))
+                      (* row (/ 256 (- height 1)))
                       0
                       (* col (/ 256 (- width 1)))))
                    width
                    height)])
-      0)))
+      image)))
