@@ -1,35 +1,11 @@
 #lang racket
 (require gigls/unsafe)
 
-(define int->list2
-  (lambda (n)
-    (letrec
-        ([lst null]
-         [ones
-          (lambda (n-ones count-ones)
-            (cond
-              [(zero? (modulo n 10))
-               (cons 0 lst)]
-              [(zero? (modulo n-ones 10))
-               (cons (- 10 count-ones) lst)]
-              [else
-               (ones (+ n-ones 1) (+ count-ones 1))]))]
-         [tens
-          (lambda (n-tens count-tens)
-            (cond
-              [(zero? (modulo n 100))
-               (cons 0 lst)]
-              [(zero? (modulo n-tens 100))
-               (cons (/ (- 100 (* 10 count-tens)) 10) lst)]
-              [else
-               (tens (+ n-tens 10) (+ count-tens 1))]))])
-      
-      (ones n 0)
-      )))
 
-(define int->list3
+; http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/eboards/eboard.46.html
+(define int->list
   (lambda (n)
-    (map (compose (section string->number <>) (section char->string <>)) (string->list (number->string n)))))
+     (list (quotient n 100) (quotient (remainder n 100) 10) (remainder n 10))))
 
 
 
