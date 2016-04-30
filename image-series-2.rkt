@@ -40,9 +40,12 @@
                         (if (odd? n-list-c) (- width 1) (- height 1))))))
                width
                height))]
-           [(planet-elementifier ;; procedure to check season/element and change colour of planet
+           [planet-elementifier ;; procedure to check season/element and change colour of planet
              (lambda ()
-               0))
+               (let kernel [lst]
+                 (if (equal? element (car (car elements)))
+                     
+                     (kernel (cdr elements)))))]
            [planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
             (lambda ()
               (let ([planet-width (image-width planet)]
