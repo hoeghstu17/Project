@@ -44,11 +44,12 @@
             (lambda ()
               (let ([planet-width (image-width planet)]
                     [planet-height (image-width planet)])
-                (image-select-rectangle! planet REPLACE 0 0 planet-width planet-height)
+                (image-select-ellipse! planet REPLACE 0 0 planet-width planet-height)
                 (gimp-edit-copy-visible planet)
-                (gimp-edit-paste (image-get-layer image-blend) 1)
-                (image-select-nothing! image-blend)
-                (gimp-image-flatten image-blend)))]) ;;;unfinished
+                (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
+                  (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
+                  (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
+                  (gimp-image-flatten image-blend))))]) ;;;unfinished
       (planet-placer)
       (image-show image-blend)
       )))
