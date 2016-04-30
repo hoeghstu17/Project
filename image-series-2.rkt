@@ -41,8 +41,8 @@
                width
                height))]
            [planet-color-changer
-            (lambda (primary secondary)
-              (if (section equal? <> (irgb 255 255 255))
+            (lambda (pixel primary secondary)
+              (if (equal? pixel (irgb 255 255 255))
                   secondary
                   primary))]           
            [planet-elementifier ;; procedure to check season/element and change colour of planet
@@ -52,23 +52,27 @@
                   (if (equal? element-season element)
                       (let ([primary (color-name->irgb (caddr (car lst)))]
                             [secondary (color-name->irgb (cadddr (car lst)))])
-                        (image-transform!
+                        (image-variant
                          image
-                         (planet-color-changer                                            
-                          primary
-                          secondary)))
-                      (kernel (cdr lst))))))]
-           [planet (planet-elementifier plan)] ;;; must change vatiable name
-           [planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
-            (lambda ()
-              (let ([planet-width (image-width planet)]
-                    [planet-height (image-wi    MediaScheme GIMP Procedure. Opens a new window with the image. dth planet)])
-                (image-select-ellipse! planet REPLACE 0 0 planet-width planet-height)
-                (gimp-edit-copy-visible planet)
-                (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
-                  (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
-                  (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
-                  (gimp-image-flatten image-blend))))])
-      (planet-placer)
-      (image-show image-blend)
-      )))
+                         (if (equal? image (irgb 255 255 255))
+                             secondary
+                             primary)))
+                        ;                         (planet-color-changer
+                        ;                          image
+                        ;                          primary
+                        ;                          secondary)))
+                        (kernel (cdr lst))))))]
+[planet (planet-elementifier plan)] ;;; must change vatiable name
+[planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
+ (lambda ()
+   (let ([planet-width (image-width planet)]
+         [planet-height (image-width planet)])
+     (image-select-ellipse! planet REPLACE 0 0 planet-width planet-height)
+     (gimp-edit-copy-visible planet)
+     (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
+       (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
+       (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
+       (gimp-image-flatten image-blend))))])
+(planet-placer)
+(image-show image-blend)
+)))
