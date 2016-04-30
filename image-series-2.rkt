@@ -3,7 +3,7 @@
 
 (define image-series
   (lambda (n width height)
-    (let* ([n-list (list
+    (let* ([n-list (list ;;; taken from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/eboards/eboard.46.html
                     (quotient n 100)
                     (quotient (remainder n 100) 10)
                     (remainder n 10))]
@@ -17,17 +17,13 @@
                     [(equal? year 1)
                      "/home/joshua/git/project/planet1.png"]
                     [(equal? year 2)
-                     "/home/joshua/git/project/planet2.png"]
-                    [(equal? year 3)
                      "/home/joshua/git/project/planet3.png"]
-                    [(equal? year 4)
-                     "/home/joshua/git/project/planet4.png"]
-                    [(equal? year 5)
+                    [(equal? year 3)
                      "/home/joshua/git/project/planet5.png"]
                     [else
                      "/home/joshua/git/project/planet6.png"]))]                                            
            
-           [element-season (+ 1 (modulo (ceiling (/ n 73)) 5))] ;;; 73 days per season, 5 seasons
+           [element-season (+ 1 (quotient (quotient n 365) 5))] ;;; 73 days per season, 5 seasons - does not work
            [elements (list (list 1 'ARCANE "purple" "gold")
                            (list 2 'FIRE "red" "orangered")
                            (list 3 'WATER "royalblue" "skyblue")
