@@ -23,7 +23,9 @@
                     [(equal? year 4)
                      "/home/joshua/git/project/planet4.png"]
                     [(equal? year 5)
-                     "/home/joshua/git/project/planet5.png"]))]                                            
+                     "/home/joshua/git/project/planet5.png"]
+                    [else
+                     "/home/joshua/git/project/planet6.png"]))]                                            
            
            [element-season (+ 1 (modulo (ceiling (/ n 73)) 5))] ;;; 73 days per season, 5 seasons
            [elements (list (list 1 'ARCANE "purple" "gold")
