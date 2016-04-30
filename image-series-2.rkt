@@ -43,7 +43,7 @@
            [(planet-elementifier ;; procedure to check season/element and change colour of planet
              (lambda ()
                0))
-           [planet-placer ;;; procedure to place planet in image
+           [planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
             (lambda ()
               (let ([planet-width (image-width planet)]
                     [planet-height (image-width planet)])
