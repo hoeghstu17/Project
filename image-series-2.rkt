@@ -11,7 +11,8 @@
            [n-list-a (car n-list)]
            [n-list-b (cadr n-list)]
            [n-list-c (caddr n-list)]
-           [year (+ 1 (quotient n 365))] ;;; one year is 365 days long, starts at year 1
+           [planet (image-load "/home/joshua/git/project/planet.png")] ;;; file path variable                
+           [year (+ 1 (quotient n 365))] ;;; one year is 365 days long, start at year 1
            [element (+ 1 (modulo (ceiling (/ n 73)) 5))] ;;; 73 days per season, 5 seasons
            [arcane (list "violet" "gold")]
            [fire (list "red" "orangered")]
@@ -38,5 +39,16 @@
                      (/ (max-value n-list-c)
                         (if (odd? n-list-c) (- width 1) (- height 1))))))
                width
-               height))])
-      image-blend)))
+               height))]
+           [planet-placer ;;; procedure to place planet in image
+            (lambda ()
+              (let ([planet-width (image-width planet)]
+                    [planet-height (image-width planet)])
+                (image-select-rectangle! planet REPLACE 0 0 planet-width planet-height)
+                (gimp-edit-copy-visible planet)
+                (gimp-edit-paste (image-get-layer image-blend) 1)
+                (image-select-nothing! image-blend)
+                (gimp-image-flatten image-blend)))]) ;;;unfinished
+      (planet-placer)
+      (image-show image-blend)
+      )))
