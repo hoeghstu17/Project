@@ -1,0 +1,37 @@
+#lang racket
+(require gigls/unsafe)
+(define source (image-show (image-load "/home/rebelsky/Desktop/kitten.jpg")))
+ (define collage (image-show (image-new 300 200)))
+
+(define int->list
+  (lambda (n)
+    (list (quotient n 100) (quotient (remainder n 100) 10) (remainder n 10))))
+
+(define column#
+  (lambda (image source n row)
+ (section image-select-rectangle! source REPLACE <> (* row (/ (image-height source) n)) (/ (image-width source) n) (/ (image-height source) n))))
+
+(define drella!4
+  (lambda (image source n row)
+    (image-select-rectangle! image REPLACE 0 0 (image-width source) (image-height source))
+    (gimp-edit-copy-visible image)
+    (map (column# image source n row) (map * (make-list n n) (iota n)))
+    (let ([pasted (car (gimp-edit-paste (image-get-layer source) 1))])
+      (image-select-nothing! image)
+      (gimp-layer-scale pasted (/ (image-width source) n) (/ (image-height source) n) 1)
+      (gimp-image-flatten source)
+      source)))
+
+(define planets
+  (lambda (image source n row)
+    (image-select-rectangle! image REPLACE 0 0 (image-width source) (image-height source))
+    (gimp-edit-copy-visible image)
+    (map (column# image source n row) (map * (make-list n n) (iota n)))
+    (let ([pasted (car (gimp-edit-paste (image-get-layer source) 1))])
+      (image-select-nothing! image)
+      (gimp-layer-scale pasted (/ (image-width source) (+ 1 (car (int->list n)))) 
+                        (/ (image-height source) (+ 1 (car (cdr (int->list n))))) 1)
+      (gimp-image-flatten source)
+      source)))
+
+;; Drella!4 will paste images around. I am trying to scale the n down so that it will take a large number.
