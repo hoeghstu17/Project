@@ -14,11 +14,11 @@
            [planet (image-load "/home/joshua/git/project/planet.png")] ;;; file path variable                
            [year (+ 1 (quotient n 365))] ;;; one year is 365 days long, start at year 1
            [element (+ 1 (modulo (ceiling (/ n 73)) 5))] ;;; 73 days per season, 5 seasons
-           [arcane (list "violet" "gold")]
-           [fire (list "red" "orangered")]
-           [water (list "royalblue" "skyblue")]
-           [earth (list "sienna" "forestgreen")]
-           [air (list "whitesmoke" "skyblue")]
+           [elements (list (list 1 'ARCANE "violet" "gold")
+                           (list 2 'FIRE "red" "orangered")
+                           (list 3 'WATER "royalblue" "skyblue")
+                           (list 4 ' EARTH "sienna" "forestgreen")
+                           (list 5 'AIR "whitesmoke" "skyblue"))]
            [image-blend
             (let ([max-value (lambda (val)
                                (cond ;;; Add more variation here, or change to if
@@ -40,6 +40,9 @@
                         (if (odd? n-list-c) (- width 1) (- height 1))))))
                width
                height))]
+           [(planet-elementifier ;; procedure to check season/element and change colour of planet
+             (lambda ()
+               0))
            [planet-placer ;;; procedure to place planet in image
             (lambda ()
               (let ([planet-width (image-width planet)]
@@ -49,7 +52,7 @@
                 (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
                   (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
                   (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
-                  (gimp-image-flatten image-blend))))]) ;;;unfinished
+                  (gimp-image-flatten image-blend))))])
       (planet-placer)
       (image-show image-blend)
       )))
