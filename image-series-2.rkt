@@ -11,13 +11,25 @@
            [n-list-a (car n-list)]
            [n-list-b (cadr n-list)]
            [n-list-c (caddr n-list)]
-           [plan (image-load "/home/joshua/git/project/planet.png")] ;;; file path variable                
            [year (+ 1 (quotient n 365))] ;;; one year is 365 days long, start at year 1
+           [plan (image-load
+                  (cond
+                    [(equal? year 1)
+                     "/home/joshua/git/project/planet1.png"]
+                    [(equal? year 2)
+                     "/home/joshua/git/project/planet2.png"]
+                    [(equal? year 3)
+                     "/home/joshua/git/project/planet3.png"]
+                    [(equal? year 4)
+                     "/home/joshua/git/project/planet4.png"]
+                    [(equal? year 5)
+                     "/home/joshua/git/project/planet5.png"]))]                                            
+           
            [element-season (+ 1 (modulo (ceiling (/ n 73)) 5))] ;;; 73 days per season, 5 seasons
-           [elements (list (list 1 'ARCANE "violet" "gold")
+           [elements (list (list 1 'ARCANE "purple" "gold")
                            (list 2 'FIRE "red" "orangered")
                            (list 3 'WATER "royalblue" "skyblue")
-                           (list 4 ' EARTH "sienna" "forestgreen")
+                           (list 4 'EARTH "sienna" "forestgreen")
                            (list 5 'AIR "whitesmoke" "skyblue"))]
            [image-blend
             (let ([max-value (lambda (val)
@@ -39,7 +51,7 @@
                      (/ (max-value n-list-c)
                         (if (odd? n-list-c) (- width 1) (- height 1))))))
                width
-               height))]
+               height))]           
            [planet-color-changer
             (lambda (pixel primary secondary)
               (if (equal? pixel (irgb 255 255 255))
@@ -52,27 +64,24 @@
                   (if (equal? element-season element)
                       (let ([primary (color-name->irgb (caddr (car lst)))]
                             [secondary (color-name->irgb (cadddr (car lst)))])
-                        (image-variant
+                        (image-transform!
                          image
-                         (if (equal? image (irgb 255 255 255))
-                             secondary
-                             primary)))
-                        ;                         (planet-color-changer
-                        ;                          image
-                        ;                          primary
-                        ;                          secondary)))
-                        (kernel (cdr lst))))))]
-[planet (planet-elementifier plan)] ;;; must change vatiable name
-[planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
- (lambda ()
-   (let ([planet-width (image-width planet)]
-         [planet-height (image-width planet)])
-     (image-select-ellipse! planet REPLACE 0 0 planet-width planet-height)
-     (gimp-edit-copy-visible planet)
-     (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
-       (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
-       (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
-       (gimp-image-flatten image-blend))))])
-(planet-placer)
-(image-show image-blend)
-)))
+                         (section planet-color-changer ;;; David Neill Asanza helped with sectioning image-transform                          
+                                  <>
+                                  primary
+                                  secondary)))
+                      (kernel (cdr lst))))))]           
+           [planet (planet-elementifier plan)] ;;; must change variable name
+           [planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
+            (lambda ()
+              (let ([planet-width (image-width planet)]
+                    [planet-height (image-width planet)])
+                (image-select-ellipse! planet REPLACE 0 0 planet-width planet-height)
+                (gimp-edit-copy-visible planet)
+                (let ([pasted (car (gimp-edit-paste (image-get-layer image-blend) 1))])
+                  (image-select-ellipse! image-blend REPLACE 0 0 width height)                (image-select-nothing! image-blend)
+                  (gimp-layer-scale pasted (/ width 5) (/ height 5) 1)
+                  (gimp-image-flatten image-blend))))])
+      (planet-placer)
+      (image-show image-blend)
+      )))
