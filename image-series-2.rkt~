@@ -1,0 +1,13 @@
+#lang racket
+(require gigls/unsafe)
+
+(define image-series
+  (lambda (n width height)
+    (let* ([n-list (list
+                   (quotient n 100)
+                   (quotient (remainder n 100) 10)
+                   (remainder n 10))]
+          [n-list-sum (apply + n-list)]
+          [n-list-a (car n-list)]
+          [n-list-b (cadr n-list)]
+          [n-list-c (caddr n-list)]))
