@@ -147,6 +147,8 @@
                      "/home/joshua/git/project/planet3.png"]
                     [(equal? year 3)
                      "/home/joshua/git/project/planet5.png"]
+                    [(> n 990)
+                      "/home/joshua/git/project/planet6.png"]
                     [else
                      "/home/joshua/git/project/planet6.png"]))]                                            
            [elements (list (list 1 'ARCANE "purple" "gold")
