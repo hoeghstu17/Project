@@ -12,6 +12,7 @@
            [n-list-b (cadr n-list)]
            [n-list-c (caddr n-list)]
            [year (+ 1 (quotient n 365))] ;;; one year is 365 days long, start at year 1
+           [element-season (+ 1 (floor (/ (remainder n 365) 73)))] ;;; 73 days per season, 5 seasons - does not work
            [plan (image-load
                   (cond
                     [(equal? year 1)
@@ -23,11 +24,10 @@
                     [else
                      "/home/joshua/git/project/planet6.png"]))]                                            
            
-           [element-season (+ 1 (quotient (quotient n 365) 5))] ;;; 73 days per season, 5 seasons - does not work
            [elements (list (list 1 'ARCANE "purple" "gold")
-                           (list 2 'FIRE "red" "orangered")
+                           (list 2 'EARTH "forestgreen" "lightblue")
                            (list 3 'WATER "royalblue" "skyblue")
-                           (list 4 'EARTH "sienna" "forestgreen")
+                           (list 4 'FIRE "gray" "orangered")                           
                            (list 5 'AIR "whitesmoke" "skyblue"))]
            [image-blend
             (let ([max-value (lambda (val)
@@ -49,26 +49,27 @@
                      (/ (max-value n-list-c)
                         (if (odd? n-list-c) (- width 1) (- height 1))))))
                width
-               height))]           
+               height))]                 
            [planet-color-changer
             (lambda (pixel primary secondary)
               (if (equal? pixel (irgb 255 255 255))
                   secondary
-                  primary))]           
+                  primary))]
            [planet-elementifier ;; procedure to check season/element and change colour of planet
             (lambda (image)
               (let kernel ([lst elements])
                 (let ([element (car (car lst))])
-                  (if (equal? element-season element)
-                      (let ([primary (color-name->irgb (caddr (car lst)))]
-                            [secondary (color-name->irgb (cadddr (car lst)))])
-                        (image-transform!
-                         image
-                         (section planet-color-changer ;;; David Neill Asanza helped with sectioning image-transform                          
-                                  <>
-                                  primary
-                                  secondary)))
-                      (kernel (cdr lst))))))]           
+                  (if
+                   (equal? element-season element)
+                   (let ([primary (color-name->irgb (caddr (car lst)))]
+                         [secondary (color-name->irgb (cadddr (car lst)))])
+                     (image-transform!
+                      image
+                      (section planet-color-changer ;;; David Neill Asanza helped with sectioning image-transform                          
+                               <>
+                               primary
+                               secondary)))
+                   (kernel (cdr lst))))))]                      
            [planet (planet-elementifier plan)] ;;; must change variable name
            [planet-placer ;;; procedure to place planet in image based on code from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/labs/collage-lab.html
             (lambda ()
