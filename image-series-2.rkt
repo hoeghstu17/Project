@@ -242,10 +242,10 @@
   (lambda (center image)
     (let* ([x (car center)]
            [y (cdr center)]
-           [north-pixel (image-get-pixel image (floor x (+ y 20)))]
-           [east-pixel (image-get-pixel image (floor (+ x 20) y))]
-           [south-pixel (image-get-pixel image x (floor (- y 20)))]
-           [west-pixel (image-get-pixel image (floor (- x 20) y))])
+           [north-pixel (image-get-pixel image (floor x) (floor (+ y 20)))]
+           [east-pixel (image-get-pixel image (floor (+ x 20)) (floor y))]
+           [south-pixel (image-get-pixel image (floor x) (floor (- y 20)))]
+           [west-pixel (image-get-pixel image (floor (- x 20)) (floor y))])
       (irgb-complement (irgb (/ (+ (irgb-red north-pixel)
                                    (irgb-red east-pixel)
                                    (irgb-red south-pixel)
