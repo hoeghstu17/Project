@@ -23,16 +23,47 @@
          (kernel (+ 1 side-length))
          (- side-length 1))))))
 
+(define sun-components
+  (lambda (turtle sides center-point)
+    (let kernel ([count 18]
+                 [length 6])
+      (cond
+        [(zero? count)
+         0] ;;; what should the base case be? idk
+        [else
+         (turtle-polygon! turtle length sides center-point)
+         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
+
+
+(define sun-maker
+  (lambda (turtle center-point) ;;; center-point is a pair, eg. '(250 . 250)
+    (sun-components turtle 8 center-point)
+    (sun-components turtle 10 center-point)))
+
 
 (define turtle-sun-starter
-  (lambda (turtle width height)
+  (lambda (turtle n width height)
     (let* ([orbit-side-length (sun-orbit-scaler width height)]
-           [orbit-radius (radius orbit-side-length 365)])
+           [orbit-radius (radius orbit-side-length 365)]
+           [angle-of-exterior-turn (/ 360 365)]
+           [orbit
+            (lambda (turtle)
+              (turtle-forward! turtle orbit-side-length)
+              (turtle-turn! turtle angle-of-exterior-turn))])
       (turtle-up! turtle)
       (turtle-teleport!
        turtle
        (/ (image-width (turtle-world turtle)) 2)
-       (/ (image-height (turtle-world turtle)) 2)))))
+       (/ (image-height (turtle-world turtle)) 2))
+      (turtle-face! turtle 270)
+      (turtle-forward! turtle orbit-radius)
+      (let kernel
+        ([orbits (modulo n 365)])
+        (cond
+          [(zero? orbits)
+           (sun-maker turtle (turtle-point turtle))]
+          [(orbit turtle)
+           (kernel (- orbits 1))])))))
 
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
@@ -63,22 +94,7 @@
       (initialise-turtle turtle)      
       (repeat sides draw-side turtle))))
 
-(define sun-components
-  (lambda (turtle sides center-point)
-    (let kernel ([count 18]
-                 [length 6])
-      (cond
-        [(zero? count)
-         0] ;;; what should the base case be? idk
-        [else
-         (turtle-polygon! turtle length sides center-point)
-         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
 
-
-(define sun-maker
-  (lambda (turtle center-point) ;;; center-point is a pair, eg. '(250 . 250)
-    (sun-components turtle 8 center-point)
-    (sun-components turtle 10 center-point)))
 
 
 
