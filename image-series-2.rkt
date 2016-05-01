@@ -188,15 +188,15 @@
       ([count n-of-polygons]
        [length polygon-side-length])
       (turtle-set-color!
-       turtle (contrast-color
-               (turtle-point turtle)
-               image))
+       turtle
+       (contrast-color
+        turtle))
       (when (> count 0)
         (turtle-polygon! turtle length n-of-sides center-point)
         (kernel (- count 1) (* length 1.2))))))
 
 ;;; UNFINISHED DOCUMENTATION
-;;; Procedure:
+
 ;;;   satellite-starter
 ;;; Parameters:
 ;;;   center-point, a pair
@@ -239,46 +239,48 @@
 
 
 (define contrast-color
-  (lambda (center image)
-    (display center) (newline)
-    (display (car center)) (newline)
-    (display (cdr center))
-    (let* ([(floor x (car center))]
-           [(floor y (cdr center))]
-           [north-pixel (image-get-pixel image x (+ y 20))]
-           [east-pixel (image-get-pixel image (+ x 20) y)]
-           [south-pixel (image-get-pixel image x (- y 20))]
-           [west-pixel (image-get-pixel image (- x 20) y)])
-      (irgb-complement (irgb (quotient (+ (irgb-red north-pixel)
-                                   (irgb-red east-pixel)
-                                   (irgb-red south-pixel)
-                                   (irgb-red west-pixel)) 4)
-                             (quotient (+ (irgb-green north-pixel)
-                                   (irgb-green east-pixel)
-                                   (irgb-green south-pixel)
-                                   (irgb-green west-pixel)) 4)
-                             (quotient (+ (irgb-blue north-pixel)
-                                   (irgb-blue east-pixel)
-                                   (irgb-blue south-pixel)
-                                   (irgb-blue west-pixel)) 4))))))
-
-
-
-
-
-
-
-
-
-
-(define image-series
-  (lambda (n width height)
-    (let* ([year (+ 1 (quotient n 365))]           
-           [planet (planet-chooser n year)]
-           [image (background-blend n width height)]
-           [solaris (turtle-new image)])
-      (image-show image)
-      (planet-seasoning n planet)
-      (planet-placer planet image)
-      (turtle-set-brush! solaris "2. Hardness 100")
-      (satellite-starter solaris n width height image))))
+  (lambda (x y turtle)
+    (let* ([x (round (car (turtle-point turtle)))]
+           [y (round (cdr (turtle-point turtle)))]
+           ([image (turtle-world turtle)])
+           (display x)
+           (newline)
+           (display y)
+           (let ([north-pixel (image-get-pixel image x (+ y 20))]
+                 [east-pixel (image-get-pixel image (+ x 20) y)]
+                 [south-pixel (image-get-pixel image x (- y 20))]
+                 [west-pixel (image-get-pixel image (- x 20) y)])
+             (irgb-complement (irgb (quotient (+ (irgb-red north-pixel)
+                                                 (irgb-red east-pixel)
+                                                 (irgb-red south-pixel)
+                                                 (irgb-red west-pixel)) 4)
+                                    (quotient (+ (irgb-green north-pixel)
+                                                 (irgb-green east-pixel)
+                                                 (irgb-green south-pixel)
+                                                 (irgb-green west-pixel)) 4)
+                                    (quotient (+ (irgb-blue north-pixel)
+                                                 (irgb-blue east-pixel)
+                                                 (irgb-blue south-pixel)
+                                                 (irgb-blue west-pixel)) 4)))))))
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  (define image-series
+    (lambda (n width height)
+      (let* ([year (+ 1 (quotient n 365))]           
+             [planet (planet-chooser n year)]
+             [image (background-blend n width height)]
+             [solaris (turtle-new image)])
+        (image-show image)
+        (planet-seasoning n planet)
+        (planet-placer planet image)
+        (turtle-set-brush! solaris "2. Hardness 100")
+        (satellite-starter solaris n width height image))))
+  
