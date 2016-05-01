@@ -5,8 +5,35 @@
 (define test-turtle (turtle-new world))
 (turtle-set-brush! test-turtle "2. Hardness 100")
 
+(define sol (list "orangered" "sienna" "orange" "yellow")) ;;; sun colors
+
+(define sun-orbit-scaler
+  (lambda (width height)
+    (let ([radius
+           (lambda (side-length sides)
+             (/ side-length (* 2 (sin (/ pi sides)))))]
+          [max-width (* .6 (/ width 2))]
+          [max-height (* .6 (/ height 2))])
+    (let kernel ([side-length 1])
+      (if
+         (and
+          (< (radius side-length 365) max-width)
+          (< (radius side-length 365) max-height))         
+         (kernel (+ 1 side-length))
+        (- side-length 1))))))
+
+
+(define turtle-sun-starter
+ (lambda (turtle width height)
+   (let ([orbit-side-length (sun-orbit-scaler width height)])
+   (turtle-up! turtle)
+   (turtle-teleport!
+               turtle
+               (/ (image-width (turtle-world turtle)) 2)
+               (/ (image-height (turtle-world turtle)) 2)))))
+
 (define turtle-polygon!
-  (lambda (turtle side-length sides)
+  (lambda (turtle side-length sides center-point)
     (let* ([radius
             (/ side-length (* 2 (sin (/ pi sides))))]
            [angle-of-exterior-turn
@@ -19,8 +46,8 @@
             (lambda (turtle)
               (turtle-teleport!
                turtle
-               (/ (image-width (turtle-world turtle)) 2)
-               (/ (image-height (turtle-world turtle)) 2))
+               (car center-point)
+               (cdr center-point))               
               (turtle-up! turtle)
               (turtle-turn! turtle angle-of-initialising-turn)                            
               (turtle-forward! turtle radius)
@@ -50,22 +77,7 @@
    (sun-components turtle 8)
    (sun-components turtle 10)))
 
-(define turtle-orbit-scaler
-  (lambda (n width height)
-    (let* ([radius
-           (lambda (side-length sides)
-             (/ side-length (* 2 (sin (/ pi sides)))))]
-           [outer-sun-deca-radius
-            (radius 134 10)]
-          [max-width (/ width 2)]
-          [max-height (/ height 2)])
-    (let kernel ([side-length 1])
-      (if
-        (and
-          (< (+ outer-sun-deca-radius (radius side-length 365)) max-width)
-          (< (+ outer-sun-deca-radius (radius side-length 365 )) max-height))
-         (kernel (+ 1 side-length))
-        (- side-length 1))))))
+
       
                
                
