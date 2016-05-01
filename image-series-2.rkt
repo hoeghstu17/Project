@@ -22,75 +22,15 @@
   (lambda (side-length sides)
     (/ side-length (* 2 (sin (/ pi sides))))))
 
-(define satellite-orbit-scaler
-  (lambda (width height)
-    (let ([max-width (* .8 (/ width 2))] ;;; currently the sun is positioned relative to the height and width of the image, I would like to change this so that it is positioned relative to the center of the image
-          [max-height (* .8 (/ height 2))])
-      (let kernel ([side-length 1])
-        (if
-         (and
-          (< (radius side-length 365) max-width)
-          (< (radius side-length 365) max-height))         
-         (kernel (+ 1 side-length))
-         (- side-length 1))))))
-
-
-
-;
-;(define satellite-components
-;  (lambda (turtle sides center-point)
-;    (let kernel ([count 8]
-;                 [length 6])
-;      (cond
-;        [(zero? count)
-;         0] ;;; what should the base case be? idk
-;        [else
-;         (turtle-polygon! turtle length sides center-point)
-;         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
-
-
+;;; UNFINISHED DOCUMENTATION
 ;;; Procedure:
-;;;   satellite-maker
+;;;   turtle-polygon!
 ;;; Parameters:
-;;;   turtle, a turtle
-;;;   n-of-polygons, an integer > 0
-;;;   length-of-sides, a real number > 0
 ;;;   center-point, a pair
 ;;; Purpose:
 ;;;   Using turtle to draw a satellite orbiting planet
 ;;; Produces:
 ;;;   Nothing, called for side effect
-(define satellite-maker
-  (lambda (turtle n-of-polygons n-of-sides length-of-sides center-point)
-             (let kernel
-               ([count n-of-polygons]
-                [length length-of-sides])
-               (when (> 0 count)
-                 (turtle-polygon! turtle length n-of-sides center-point)
-                 (kernel (- count 1) (* length 1.2))))))
-
-
-(define satellite-starter
-  (lambda (turtle n width height)
-    (let* ([orbit-side-length (satellite-orbit-scaler width height)]
-           [orbit-radius (radius orbit-side-length 365)]
-           [angle-of-exterior-turn (/ 360 365)]
-           [orbit
-            (lambda (turtle)
-              (turtle-forward! turtle orbit-side-length)
-              (turtle-turn! turtle angle-of-exterior-turn))]
-           [remaining-movements (modulo n 365)])
-      (turtle-down! turtle)
-      (turtle-teleport!
-       turtle
-       (/ (image-width (turtle-world turtle)) 2)
-       (/ (image-height (turtle-world turtle)) 2))
-      (turtle-face! turtle 270)
-      (turtle-forward! turtle orbit-radius)
-      (turtle-face! turtle 0)
-      (repeat remaining-movements orbit turtle)
-      (satellite-maker turtle 8 6 (turtle-point turtle)))))
-
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
     (let* ([center-x (car center-point)]
@@ -120,9 +60,83 @@
       (initialise-turtle turtle)      
       (repeat sides draw-side turtle))))
 
+;;; UNFINISHED DOCUMENTATION
+;;; Procedure:
+;;;   satellite-orbit-scaler
+;;; Parameters:
+;;;   center-point, a pair
+;;; Purpose:
+;;;   Using turtle to draw a satellite orbiting planet
+;;; Produces:
+;;;   Nothing, called for side effect
+(define satellite-orbit-scaler
+  (lambda (width height)
+    (let ([max-width (* .8 (/ width 2))] ;;; currently the sun is positioned relative to the height and width of the image, I would like to change this so that it is positioned relative to the center of the image
+          [max-height (* .8 (/ height 2))])
+      (let kernel ([side-length 1])
+        (if
+         (and
+          (< (radius side-length 365) max-width)
+          (< (radius side-length 365) max-height))         
+         (kernel (+ 1 side-length))
+         (- side-length 1))))))
 
 
+;;; UNFINISHED DOCUMENTATION
+;;; Procedure:
+;;;   satellite-maker
+;;; Parameters:
+;;;   center-point, a pair
+;;; Purpose:
+;;;   Using turtle to draw a satellite orbiting planet
+;;; Produces:
+;;;   Nothing, called for side effect
+(define satellite-maker
+  (lambda (turtle n-of-polygons n-of-sides polygon-side-length center-point)
+    (let kernel
+      ([count n-of-polygons]
+       [length polygon-side-length])
+      (when (> count 0)
+        (turtle-polygon! turtle length n-of-sides center-point)
+        (kernel (- count 1) (* length 1.2))))))
 
+;;; UNFINISHED DOCUMENTATION
+;;; Procedure:
+;;;   satellite-starter
+;;; Parameters:
+;;;   center-point, a pair
+;;; Purpose:
+;;;   Using turtle to draw a satellite orbiting planet
+;;; Produces:
+;;;   Nothing, called for side effect
+(define satellite-starter
+  (lambda (turtle n width height)
+    (let* ([orbit-side-length (satellite-orbit-scaler width height)]
+           [orbit-radius (radius orbit-side-length 365)]
+           [angle-of-exterior-turn (/ 360 365)]
+           [orbit
+            (lambda (turtle)
+              (turtle-forward! turtle orbit-side-length)
+              (turtle-turn! turtle angle-of-exterior-turn))]
+           [remaining-movements (modulo n 365)]
+           [n-of-polygons 8]
+           [n-of-sides 10]
+           [polygon-side-length 6])
+      (turtle-down! turtle)
+      (turtle-teleport!
+       turtle
+       (/ (image-width (turtle-world turtle)) 2)
+       (/ (image-height (turtle-world turtle)) 2))
+      (turtle-face! turtle 270)
+      (turtle-forward! turtle orbit-radius)
+      (turtle-face! turtle 0)
+      (repeat remaining-movements orbit turtle)
+      (satellite-maker
+       turtle
+       n-of-polygons
+       n-of-sides
+       polygon-side-length
+       (turtle-point turtle)))))
 
 
 
@@ -141,14 +155,14 @@
            [element-season (+ 1 (floor (/ (remainder n 365) 73)))] ;;; 73 days per season, 5 seasons - does not work
            [plan (image-load
                   (cond
+                    [(> n 990)
+                     "/home/joshua/git/project/planet6.png"]
                     [(equal? year 1)
                      "/home/joshua/git/project/planet1.png"]
                     [(equal? year 2)
                      "/home/joshua/git/project/planet3.png"]
                     [(equal? year 3)
-                     "/home/joshua/git/project/planet5.png"]
-                    [(> n 990)
-                      "/home/joshua/git/project/planet6.png"]
+                     "/home/joshua/git/project/planet5.png"]                    
                     [else
                      "/home/joshua/git/project/planet6.png"]))]                                            
            [elements (list (list 1 'ARCANE "purple" "gold")
@@ -157,12 +171,13 @@
                            (list 4 'FIRE "gray" "orangered")                           
                            (list 5 'AIR "whitesmoke" "skyblue"))]
            [image-blend
-            (let ([max-value (lambda (val)
-                               (cond ;;; Add more variation here, or change to if
-                                 [(even? n-list-sum)
-                                  (- 256 (* val (quotient 256 9)))]
-                                 [else
-                                  (- 256 (* val 28))]))])
+            (let ([max-value
+                   (lambda (val)
+                     (cond ;;; Add more variation here, or change to if
+                       [(even? n-list-sum)
+                        (- 256 (* val (quotient 256 9)))]
+                       [else
+                        (- 256 (* val 28))]))])
               (image-compute
                (lambda (x y)
                  (irgb
