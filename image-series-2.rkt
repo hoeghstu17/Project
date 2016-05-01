@@ -7,30 +7,32 @@
 
 (define sol (list "orangered" "sienna" "orange" "yellow")) ;;; sun colors
 
+(define radius
+  (lambda (side-length sides)
+    (/ side-length (* 2 (sin (/ pi sides))))))
+
 (define sun-orbit-scaler
   (lambda (width height)
-    (let ([radius
-           (lambda (side-length sides)
-             (/ side-length (* 2 (sin (/ pi sides)))))]
-          [max-width (* .6 (/ width 2))]
+    (let ([max-width (* .6 (/ width 2))]
           [max-height (* .6 (/ height 2))])
-    (let kernel ([side-length 1])
-      (if
+      (let kernel ([side-length 1])
+        (if
          (and
           (< (radius side-length 365) max-width)
           (< (radius side-length 365) max-height))         
          (kernel (+ 1 side-length))
-        (- side-length 1))))))
+         (- side-length 1))))))
 
 
 (define turtle-sun-starter
- (lambda (turtle width height)
-   (let ([orbit-side-length (sun-orbit-scaler width height)])
-   (turtle-up! turtle)
-   (turtle-teleport!
-               turtle
-               (/ (image-width (turtle-world turtle)) 2)
-               (/ (image-height (turtle-world turtle)) 2)))))
+  (lambda (turtle width height)
+    (let* ([orbit-side-length (sun-orbit-scaler width height)]
+           [orbit-radius (radius orbit-side-length 365)])
+      (turtle-up! turtle)
+      (turtle-teleport!
+       turtle
+       (/ (image-width (turtle-world turtle)) 2)
+       (/ (image-height (turtle-world turtle)) 2)))))
 
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
@@ -62,25 +64,25 @@
 
 (define sun-components
   (lambda (turtle sides)
-  (let kernel ([count 18]
-               [length 6])
-    (cond
-      [(zero? count)
-       0] ;;; what should the base case be? idk
-      [else
-       (turtle-polygon! turtle length sides)
-       (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
+    (let kernel ([count 18]
+                 [length 6])
+      (cond
+        [(zero? count)
+         0] ;;; what should the base case be? idk
+        [else
+         (turtle-polygon! turtle length sides)
+         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
 
 
 (define sun-maker
- (lambda (turtle)
-   (sun-components turtle 8)
-   (sun-components turtle 10)))
+  (lambda (turtle)
+    (sun-components turtle 8)
+    (sun-components turtle 10)))
 
 
-      
-               
-               
+
+
+
 
 (define image-series
   (lambda (n width height)
