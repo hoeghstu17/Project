@@ -1,7 +1,15 @@
+
+;; This code will create either a puppy or a kitten image that roatates through 10 postions we could increase or decrease that 
+;; number. I need to figure out how to adjust it so that we can place images on the left. We will write a cond for whether it
+;; is a kitten or a puppy. We could add more too.
+
+
 #lang racket
 (require gigls/unsafe)
-(define source (image-show (image-load "/home/rebelsky/Desktop/kitten.jpg")))
+(define kitten (image-show (image-load "/home/rebelsky/Desktop/kitten.jpg")))
+(define kitten2 (image-show (image-load "/home/hoeghstu17/Desktop/happy-kitten.jpg")))
  (define collage (image-show (image-new 300 200)))
+(define puppy (image-show (image-load "/home/hoeghstu17/Desktop/Puppy1.jpg")))
 
 (define int->list
   (lambda (n)
@@ -13,7 +21,7 @@
 
 (define drella!4
   (lambda (image source n row)
-    (image-select-rectangle! image REPLACE 0 0 (image-width source) (image-height source))
+    (image-select-rectangle! image REPLACE 0 0 (image-width image) (image-height image))
     (gimp-edit-copy-visible image)
     (map (column# image source n row) (map * (make-list n n) (iota n)))
     (let ([pasted (car (gimp-edit-paste (image-get-layer source) 1))])
@@ -22,16 +30,10 @@
       (gimp-image-flatten source)
       source)))
 
-(define planets
-  (lambda (image source n row)
-    (image-select-rectangle! image REPLACE 0 0 (image-width source) (image-height source))
-    (gimp-edit-copy-visible image)
-    (map (column# image source n row) (map * (make-list n n) (iota n)))
-    (let ([pasted (car (gimp-edit-paste (image-get-layer source) 1))])
-      (image-select-nothing! image)
-      (gimp-layer-scale pasted (/ (image-width source) (+ 1 (car (int->list n)))) 
-                        (/ (image-height source) (+ 1 (car (cdr (int->list n))))) 1)
-      (gimp-image-flatten source)
-      source)))
+(define kitten-place
+  (lambda (image n)
+    (drella!4 kitten2 image 10 (car (cddr (int->list n)))))) 
 
-;; Drella!4 will paste images around. I am trying to scale the n down so that it will take a large number.
+(define puppy-place
+  (lambda (image n)
+    (drella!4 puppy image (+ 1 (car (cddr (int->list n)))) (car (cddr (int->list n))))))
