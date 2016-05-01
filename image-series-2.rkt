@@ -7,6 +7,7 @@
 
 (define sol (list "orangered" "sienna" "orange" "yellow")) ;;; sun colors
 
+
 ;;; Procedure:
 ;;;   radius
 ;;; Parameters:
@@ -21,7 +22,7 @@
   (lambda (side-length sides)
     (/ side-length (* 2 (sin (/ pi sides))))))
 
-(define sun-orbit-scaler
+(define satellite-orbit-scaler
   (lambda (width height)
     (let ([max-width (* .8 (/ width 2))] ;;; currently the sun is positioned relative to the height and width of the image, I would like to change this so that it is positioned relative to the center of the image
           [max-height (* .8 (/ height 2))])
@@ -33,27 +34,45 @@
          (kernel (+ 1 side-length))
          (- side-length 1))))))
 
-(define sun-components
-  (lambda (turtle sides center-point)
-    (let kernel ([count 8]
-                 [length 6])
-      (cond
-        [(zero? count)
-         0] ;;; what should the base case be? idk
-        [else
-         (turtle-polygon! turtle length sides center-point)
-         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
 
 
-(define sun-maker
-  (lambda (turtle center-point) ;;; center-point is a pair, eg. '(250 . 250)
-    ;(sun-components turtle 8 center-point)
-    (sun-components turtle 10 center-point)))
+;
+;(define satellite-components
+;  (lambda (turtle sides center-point)
+;    (let kernel ([count 8]
+;                 [length 6])
+;      (cond
+;        [(zero? count)
+;         0] ;;; what should the base case be? idk
+;        [else
+;         (turtle-polygon! turtle length sides center-point)
+;         (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
 
 
-(define turtle-sun-starter
+;;; Procedure:
+;;;   satellite-maker
+;;; Parameters:
+;;;   turtle, a turtle
+;;;   n-of-polygons, an integer > 0
+;;;   length-of-sides, a real number > 0
+;;;   center-point, a pair
+;;; Purpose:
+;;;   Using turtle to draw a satellite orbiting planet
+;;; Produces:
+;;;   Nothing, called for side effect
+(define satellite-maker
+  (lambda (turtle n-of-polygons n-of-sides length-of-sides center-point)
+             (let kernel
+               ([count n-of-polygons]
+                [length length-of-sides])
+               (when (> 0 count)
+                 (turtle-polygon! turtle length n-of-sides center-point)
+                 (kernel (- count 1) (* length 1.2))))))
+
+
+(define satellite-starter
   (lambda (turtle n width height)
-    (let* ([orbit-side-length (sun-orbit-scaler width height)]
+    (let* ([orbit-side-length (satellite-orbit-scaler width height)]
            [orbit-radius (radius orbit-side-length 365)]
            [angle-of-exterior-turn (/ 360 365)]
            [orbit
@@ -70,7 +89,7 @@
       (turtle-forward! turtle orbit-radius)
       (turtle-face! turtle 0)
       (repeat remaining-movements orbit turtle)
-      (sun-maker turtle (turtle-point turtle)))))
+      (satellite-maker turtle 8 6 (turtle-point turtle)))))
 
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
