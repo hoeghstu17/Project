@@ -1,34 +1,6 @@
 #lang racket
 (require gigls/unsafe)
 
-(define turtle-polygon!
-  (lambda (turtle side-length sides)
-    (let* ([radius
-            (/ side-length (* 2 (sin (/ pi sides))))]
-           [angle-of-exterior-turn
-            (/ 360 sides)]
-           [angle-of-initialising-turn
-            (radians->degrees
-             (- (- (* 2 pi) (degrees->radians (+ (turtle-angle turtle) 90)))
-                (sin (/ (/ side-length 2) radius))))]
-           [initialise-turtle
-            (lambda (turtle)
-              (turtle-teleport!
-               turtle
-               (/ (image-width (turtle-world turtle)) 2)
-               (/ (image-height (turtle-world turtle)) 2))
-              (turtle-up! turtle)
-              (turtle-turn! turtle angle-of-initialising-turn)                            
-              (turtle-forward! turtle radius)
-              (turtle-face! turtle 0)
-              (turtle-down! turtle))]
-           [draw-side
-            (lambda (turtle)
-              (turtle-forward! turtle side-length)
-              (turtle-turn! turtle angle-of-exterior-turn))])
-      (initialise-turtle turtle)      
-      (repeat sides draw-side turtle))))
-
 (define image-series
   (lambda (n width height)
     (let* ([n-list (list ;;; taken from http://www.cs.grinnell.edu/~rebelsky/Courses/CSC151/2016S/eboards/eboard.46.html
