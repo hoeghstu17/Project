@@ -183,10 +183,14 @@
 ;;; Produces:
 ;;;   Nothing, called for side effect
 (define satellite-maker
-  (lambda (turtle n-of-polygons n-of-sides polygon-side-length center-point)
+  (lambda (turtle n-of-polygons n-of-sides polygon-side-length center-point image)
     (let kernel
       ([count n-of-polygons]
        [length polygon-side-length])
+      (turtle-set-color!
+       turtle (contrast-color
+               (turtle-point turtle)
+               image))
       (when (> count 0)
         (turtle-polygon! turtle length n-of-sides center-point)
         (kernel (- count 1) (* length 1.2))))))
@@ -201,7 +205,7 @@
 ;;; Produces:
 ;;;   Nothing, called for side effect
 (define satellite-starter
-  (lambda (turtle n width height)
+  (lambda (turtle n width height image)
     (let* ([orbit-side-length (satellite-orbit-scaler width height)]
            [orbit-radius (radius orbit-side-length 365)]
            [angle-of-exterior-turn (/ 360 365)]
@@ -221,17 +225,39 @@
       (turtle-face! turtle 270)
       (turtle-forward! turtle orbit-radius)
       (turtle-face! turtle 0)
+      (turtle-set-color! turtle "white")
+      (turtle-down! turtle)
       (repeat remaining-movements orbit turtle)
       (satellite-maker
        turtle
        n-of-polygons
        n-of-sides
        polygon-side-length
+       image
        (turtle-point turtle)))))
 
 
 
-
+(define contrast-color
+  (lambda (center image)
+    (let* ([x (car center)]
+           [y (cdr center)]
+           [north-pixel (image-get-pixel image x (+ y 20))]
+           [east-pixel (image-get-pixel image (+ x 20) y)]
+           [south-pixel (image-get-pixel image x (- y 20))]
+           [west-pixel (image-get-pixel image (- x 20) y)])
+      (irgb-complement (irgb (/ (+ (irgb-red north-pixel)
+                                   (irgb-red east-pixel)
+                                   (irgb-red south-pixel)
+                                   (irgb-red west-pixel)) 4)
+                             (/ (+ (irgb-green north-pixel)
+                                   (irgb-green east-pixel)
+                                   (irgb-green south-pixel)
+                                   (irgb-green west-pixel)) 4)
+                             (/ (+ (irgb-blue north-pixel)
+                                   (irgb-blue east-pixel)
+                                   (irgb-blue south-pixel)
+                                   (irgb-blue west-pixel)) 4))))))
 
 
 
@@ -252,4 +278,4 @@
       (planet-seasoning n planet)
       (planet-placer planet image)
       (turtle-set-brush! solaris "2. Hardness 100")
-      (satellite-starter solaris n width height))))
+      (satellite-starter solaris n width height image))))
