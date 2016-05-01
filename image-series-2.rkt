@@ -183,7 +183,7 @@
 ;;; Produces:
 ;;;   Nothing, called for side effect
 (define satellite-maker
-  (lambda (turtle n-of-polygons n-of-sides polygon-side-length center-point image)
+  (lambda (turtle n-of-polygons n-of-sides polygon-side-length center-point)
     (let kernel
       ([count n-of-polygons]
        [length polygon-side-length])
@@ -205,7 +205,7 @@
 ;;; Produces:
 ;;;   Nothing, called for side effect
 (define satellite-starter
-  (lambda (turtle n width height image)
+  (lambda (turtle n width height)
     (let* ([orbit-side-length (satellite-orbit-scaler width height)]
            [orbit-radius (radius orbit-side-length 365)]
            [angle-of-exterior-turn (/ 360 365)]
@@ -233,54 +233,49 @@
        n-of-polygons
        n-of-sides
        polygon-side-length
-       image
        (turtle-point turtle)))))
 
 
 
 (define contrast-color
-  (lambda (x y turtle)
+  (lambda (turtle)
     (let* ([x (round (car (turtle-point turtle)))]
            [y (round (cdr (turtle-point turtle)))]
-           ([image (turtle-world turtle)])
-           (display x)
-           (newline)
-           (display y)
-           (let ([north-pixel (image-get-pixel image x (+ y 20))]
-                 [east-pixel (image-get-pixel image (+ x 20) y)]
-                 [south-pixel (image-get-pixel image x (- y 20))]
-                 [west-pixel (image-get-pixel image (- x 20) y)])
-             (irgb-complement (irgb (quotient (+ (irgb-red north-pixel)
-                                                 (irgb-red east-pixel)
-                                                 (irgb-red south-pixel)
-                                                 (irgb-red west-pixel)) 4)
-                                    (quotient (+ (irgb-green north-pixel)
-                                                 (irgb-green east-pixel)
-                                                 (irgb-green south-pixel)
-                                                 (irgb-green west-pixel)) 4)
-                                    (quotient (+ (irgb-blue north-pixel)
-                                                 (irgb-blue east-pixel)
-                                                 (irgb-blue south-pixel)
-                                                 (irgb-blue west-pixel)) 4)))))))
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  (define image-series
-    (lambda (n width height)
-      (let* ([year (+ 1 (quotient n 365))]           
-             [planet (planet-chooser n year)]
-             [image (background-blend n width height)]
-             [solaris (turtle-new image)])
-        (image-show image)
-        (planet-seasoning n planet)
-        (planet-placer planet image)
-        (turtle-set-brush! solaris "2. Hardness 100")
-        (satellite-starter solaris n width height image))))
-  
+           [image (turtle-world turtle)]
+           [north-pixel (image-get-pixel image x (+ y 20))]
+           [east-pixel (image-get-pixel image (+ x 20) y)]
+           [south-pixel (image-get-pixel image x (- y 20))]
+           [west-pixel (image-get-pixel image (- x 20) y)])
+      (irgb-complement (irgb (quotient (+ (irgb-red north-pixel)
+                                          (irgb-red east-pixel)
+                                          (irgb-red south-pixel)
+                                          (irgb-red west-pixel)) 4)
+                             (quotient (+ (irgb-green north-pixel)
+                                          (irgb-green east-pixel)
+                                          (irgb-green south-pixel)
+                                          (irgb-green west-pixel)) 4)
+                             (quotient (+ (irgb-blue north-pixel)
+                                          (irgb-blue east-pixel)
+                                          (irgb-blue south-pixel)
+                                          (irgb-blue west-pixel)) 4))))))
+
+
+
+
+
+
+
+
+
+
+(define image-series
+  (lambda (n width height)
+    (let* ([year (+ 1 (quotient n 365))]           
+           [planet (planet-chooser n year)]
+           [image (background-blend n width height)]
+           [solaris (turtle-new image)])
+      (image-show image)
+      (planet-seasoning n planet)
+      (planet-placer planet image)
+      (turtle-set-brush! solaris "2. Hardness 100")
+      (satellite-starter solaris n width height))))
