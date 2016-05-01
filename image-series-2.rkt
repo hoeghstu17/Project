@@ -1,6 +1,10 @@
 #lang racket
 (require gigls/unsafe)
 
+(define world (image-show (image-new 500 500)))
+(define test-turtle (turtle-new world))
+(turtle-set-brush! test-turtle "2. Hardness 100")
+
 (define turtle-polygon!
   (lambda (turtle side-length sides)
     (let* ([radius
@@ -28,6 +32,19 @@
               (turtle-turn! turtle angle-of-exterior-turn))])
       (initialise-turtle turtle)      
       (repeat sides draw-side turtle))))
+
+(define sun
+  (lambda (turtle sides) ;;; best number of sides is 6
+  (let kernel ([count 5]
+               [length 10])
+    (cond
+      [(zero? count)
+       0]
+      [else
+       (turtle-polygon! turtle length sides)
+       (kernel (- count 1) (* length 2))]))))
+               
+               
 
 (define image-series
   (lambda (n width height)
