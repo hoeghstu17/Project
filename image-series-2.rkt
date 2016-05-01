@@ -7,6 +7,16 @@
 
 (define sol (list "orangered" "sienna" "orange" "yellow")) ;;; sun colors
 
+;;; Procedure:
+;;;   radius
+;;; Parameters:
+;;;   side-length, a real number > 0
+;;;   sides, an integer > 0
+;;; Purpose:
+;;;   calculating the radius of the circle that circumscribes a regular polygon
+;;;   with sides number of sides, each of length side-length
+;;; Produces:
+;;;   radius-of-polygon, a real number
 (define radius
   (lambda (side-length sides)
     (/ side-length (* 2 (sin (/ pi sides))))))
@@ -25,7 +35,7 @@
 
 (define sun-components
   (lambda (turtle sides center-point)
-    (let kernel ([count 16]
+    (let kernel ([count 8]
                  [length 6])
       (cond
         [(zero? count)
@@ -37,7 +47,7 @@
 
 (define sun-maker
   (lambda (turtle center-point) ;;; center-point is a pair, eg. '(250 . 250)
-    (sun-components turtle 8 center-point)
+    ;(sun-components turtle 8 center-point)
     (sun-components turtle 10 center-point)))
 
 
@@ -49,21 +59,18 @@
            [orbit
             (lambda (turtle)
               (turtle-forward! turtle orbit-side-length)
-              (turtle-turn! turtle angle-of-exterior-turn))])
-      (turtle-up! turtle)
+              (turtle-turn! turtle angle-of-exterior-turn))]
+           [remaining-movements (modulo n 365)])
+      (turtle-down! turtle)
       (turtle-teleport!
        turtle
        (/ (image-width (turtle-world turtle)) 2)
        (/ (image-height (turtle-world turtle)) 2))
       (turtle-face! turtle 270)
       (turtle-forward! turtle orbit-radius)
-      (let kernel
-        ([orbits (modulo n 365)])
-        (cond
-          [(zero? orbits)
-           (sun-maker turtle (turtle-point turtle))]
-          [(orbit turtle)
-           (kernel (- orbits 1))])))))
+      (turtle-face! turtle 0)
+      (repeat remaining-movements orbit turtle)
+      (sun-maker turtle (turtle-point turtle)))))
 
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
@@ -123,7 +130,6 @@
                      "/home/joshua/git/project/planet5.png"]
                     [else
                      "/home/joshua/git/project/planet6.png"]))]                                            
-           
            [elements (list (list 1 'ARCANE "purple" "gold")
                            (list 2 'EARTH "forestgreen" "lightblue")
                            (list 3 'WATER "royalblue" "skyblue")
