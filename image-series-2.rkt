@@ -1,7 +1,7 @@
 #lang racket
 (require gigls/unsafe)
 
-(define world (image-show (image-new 500 500)))
+(define world (image-show (image-new 1000 1000)))
 (define test-turtle (turtle-new world))
 (turtle-set-brush! test-turtle "2. Hardness 100")
 
@@ -13,8 +13,8 @@
 
 (define sun-orbit-scaler
   (lambda (width height)
-    (let ([max-width (* .6 (/ width 2))]
-          [max-height (* .6 (/ height 2))])
+    (let ([max-width (* .8 (/ width 2))] ;;; currently the sun is positioned relative to the height and width of the image, I would like to change this so that it is positioned relative to the center of the image
+          [max-height (* .8 (/ height 2))])
       (let kernel ([side-length 1])
         (if
          (and
@@ -25,7 +25,7 @@
 
 (define sun-components
   (lambda (turtle sides center-point)
-    (let kernel ([count 18]
+    (let kernel ([count 16]
                  [length 6])
       (cond
         [(zero? count)
