@@ -240,21 +240,24 @@
 
 (define contrast-color
   (lambda (center image)
-    (let* ([x (car center)]
-           [y (cdr center)]
-           [north-pixel (image-get-pixel image (floor x) (floor (+ y 20)))]
-           [east-pixel (image-get-pixel image (floor (+ x 20)) (floor y))]
-           [south-pixel (image-get-pixel image (floor x) (floor (- y 20)))]
-           [west-pixel (image-get-pixel image (floor (- x 20)) (floor y))])
-      (irgb-complement (irgb (/ (+ (irgb-red north-pixel)
+    (display center) (newline)
+    (display (car center)) (newline)
+    (display (cdr center))
+    (let* ([(floor x (car center))]
+           [(floor y (cdr center))]
+           [north-pixel (image-get-pixel image x (+ y 20))]
+           [east-pixel (image-get-pixel image (+ x 20) y)]
+           [south-pixel (image-get-pixel image x (- y 20))]
+           [west-pixel (image-get-pixel image (- x 20) y)])
+      (irgb-complement (irgb (quotient (+ (irgb-red north-pixel)
                                    (irgb-red east-pixel)
                                    (irgb-red south-pixel)
                                    (irgb-red west-pixel)) 4)
-                             (/ (+ (irgb-green north-pixel)
+                             (quotient (+ (irgb-green north-pixel)
                                    (irgb-green east-pixel)
                                    (irgb-green south-pixel)
                                    (irgb-green west-pixel)) 4)
-                             (/ (+ (irgb-blue north-pixel)
+                             (quotient (+ (irgb-blue north-pixel)
                                    (irgb-blue east-pixel)
                                    (irgb-blue south-pixel)
                                    (irgb-blue west-pixel)) 4))))))
