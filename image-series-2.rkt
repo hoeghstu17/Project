@@ -33,16 +33,40 @@
       (initialise-turtle turtle)      
       (repeat sides draw-side turtle))))
 
-(define sun
-  (lambda (turtle sides) ;;; best number of sides is 6
-  (let kernel ([count 5]
-               [length 10])
+(define sun-components
+  (lambda (turtle sides)
+  (let kernel ([count 18]
+               [length 6])
     (cond
       [(zero? count)
-       0]
+       0] ;;; what should the base case be? idk
       [else
        (turtle-polygon! turtle length sides)
-       (kernel (- count 1) (* length 2))]))))
+       (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
+
+
+(define sun-maker
+ (lambda (turtle)
+   (sun-components turtle 8)
+   (sun-components turtle 10)))
+
+(define turtle-orbit-scaler
+  (lambda (n width height)
+    (let* ([radius
+           (lambda (side-length sides)
+             (/ side-length (* 2 (sin (/ pi sides)))))]
+           [outer-sun-deca-radius
+            (radius 134 10)]
+          [max-width (/ width 2)]
+          [max-height (/ height 2)])
+    (let kernel ([side-length 1])
+      (if
+        (and
+          (< (+ outer-sun-deca-radius (radius side-length 365)) max-width)
+          (< (+ outer-sun-deca-radius (radius side-length 365 )) max-height))
+         (kernel (+ 1 side-length))
+        (- side-length 1))))))
+      
                
                
 
