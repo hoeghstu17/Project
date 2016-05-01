@@ -36,23 +36,24 @@
 
 (define turtle-polygon!
   (lambda (turtle side-length sides center-point)
-    (let* ([radius
-            (/ side-length (* 2 (sin (/ pi sides))))]
+    (let* ([center-x (car center-point)]
+           [center-y (cdr center-point)]
+           [polygon-radius (radius side-length sides)]
            [angle-of-exterior-turn
             (/ 360 sides)]
            [angle-of-initialising-turn
             (radians->degrees
              (- (- (* 2 pi) (degrees->radians (+ (turtle-angle turtle) 90)))
-                (sin (/ (/ side-length 2) radius))))]
+                (sin (/ (/ side-length 2) polygon-radius))))]
            [initialise-turtle
             (lambda (turtle)
               (turtle-teleport!
                turtle
-               (car center-point)
-               (cdr center-point))               
+               center-x
+               center-y)               
               (turtle-up! turtle)
               (turtle-turn! turtle angle-of-initialising-turn)                            
-              (turtle-forward! turtle radius)
+              (turtle-forward! turtle polygon-radius)
               (turtle-face! turtle 0)
               (turtle-down! turtle))]
            [draw-side
@@ -63,21 +64,21 @@
       (repeat sides draw-side turtle))))
 
 (define sun-components
-  (lambda (turtle sides)
+  (lambda (turtle sides center-point)
     (let kernel ([count 18]
                  [length 6])
       (cond
         [(zero? count)
          0] ;;; what should the base case be? idk
         [else
-         (turtle-polygon! turtle length sides)
+         (turtle-polygon! turtle length sides center-point)
          (kernel (- count 1) (* length 1.2))])))) ;;; outer deceahedron side-length is 133.11...
 
 
 (define sun-maker
-  (lambda (turtle)
-    (sun-components turtle 8)
-    (sun-components turtle 10)))
+  (lambda (turtle center-point) ;;; center-point is a pair, eg. '(250 . 250)
+    (sun-components turtle 8 center-point)
+    (sun-components turtle 10 center-point)))
 
 
 
