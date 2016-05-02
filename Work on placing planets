@@ -37,3 +37,42 @@
 (define puppy-place
   (lambda (image n)
     (drella!4 puppy image (+ 1 (car (cddr (int->list n)))) (car (cddr (int->list n))))))
+    
+    
+ ;;; This was actually in the helper questions portion. I don't believe that it scales it tho.
+ 
+    ;;; Procedure:
+;;;   overlay-rectangle!
+;;; Parameters:
+;;;   source, an image
+;;;   target, an image
+;;;   source-x, a real number
+;;;   source-y, a real number
+;;;   target-x, a real number
+;;;   target-y, a real number
+;;;   width, a positive integer
+;;;   height, a positive integer
+;;; Purpose:
+;;;   Copy a width-by-height rectangle from source to target
+;;; Produces:
+;;;   [Nothing; called for the side effect.]
+;;; Preconditions:
+;;;   The selections must be within the given images.
+;;; Postconditions:
+;;;   For all 0 <= i < width, 0 <= j < height,
+;;;     (image-get-pixel target (+ i target-x) (+ j target-y)) =
+;;;       (image-get-pixel source (+ i target-x) (+ j target-y))
+;;; Ponderings:
+;;;   Does not show the update to the image.  You will need to call
+;;;   (context-update-displays!) afterwards.
+(define overlay-rectangle!
+ (lambda (source target source-x source-y target-x target-y width height)
+   ; Copy from the source
+   (image-select-rectangle! source REPLACE source-x source-y width height)
+   (gimp-edit-copy (image-get-layer source))
+   (image-select-nothing! source)
+   ; Paste into the target
+   (image-select-rectangle! target REPLACE target-x target-y width height)
+   (gimp-edit-paste (image-get-layer target) 1)
+   (gimp-image-flatten target)
+   (image-select-nothing! target)))
